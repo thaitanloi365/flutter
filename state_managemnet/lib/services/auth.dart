@@ -3,12 +3,14 @@ import 'sharedPrefs.dart';
 import '../models/models.dart';
 
 Future _fetchAllData() async {
-  return await 
+  return await Future.wait([getUserProfile(), getListItem()]);
 }
+
 Future<bool> createSession() async {
   UserToken userToken = await SharedPrefs.get('userToken');
   if (userToken != null) {
-    await Future.delayed(Duration(seconds: 3));
+    final values = await _fetchAllData();
+
     return true;
   } else {
     return false;

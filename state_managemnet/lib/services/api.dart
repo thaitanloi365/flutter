@@ -20,7 +20,7 @@ Future<UserProfile> getUserProfile() async {
   return userProfile;
 }
 
-Future<ListItem> getListItem(String username, String password) async {
+Future<ListItem> getListItem() async {
   final endPoint = endPointURL["getListItem"];
   final response = await network.authorizedRequest(endPoint: endPoint);
   final ListItem listItem = ListItem.fromJson(response);
