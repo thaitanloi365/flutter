@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class SharedPrefs {
   static Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -159,6 +160,19 @@ class SharedPrefs {
     return value;
   }
 
+  static Future<Map> getMap(String key, [Map defValue]) async {
+    Map value;
+    if (_prefsInstance == null) {
+      var instance = await _prefs;
+      final string = instance?.getString(key) ?? defValue ?? "";
+      value = json.decode(string);
+    } else {
+      final string = getString(key);
+      value = json.decode(string);
+    }
+    return value;
+  }
+
   static Future<bool> setBool(String key, bool value) async {
     var instance = await _prefs;
     return instance?.setBool(key, value) ?? Future.value(false);
@@ -182,6 +196,12 @@ class SharedPrefs {
   static Future<bool> setStringList(String key, List<String> value) async {
     var instance = await _prefs;
     return instance?.setStringList(key, value) ?? Future.value(false);
+  }
+
+  static Future<bool> setMap(String key, Map<String, dynamic> map) async {
+    var instance = await _prefs;
+    var value = json.encode(map);
+    return instance?.setString(key, value) ?? Future.value(false);
   }
 
   static Future<bool> remove(String key) async {

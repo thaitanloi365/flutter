@@ -1,8 +1,7 @@
-import express from "express";
-import bodyParser from "body-parser";
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+var express = require("express");
+var bodyParser = require("body-parser");
+
+var app = express();
 
 const PORT = 5000;
 
@@ -11,7 +10,10 @@ function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-app.post("/login", (req, res) => {
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+app.post("/login", bodyParser.json(), (req, res) => {
   const { username, password } = req.body;
   let success = false;
   let message = "Login failed";
@@ -22,7 +24,27 @@ app.post("/login", (req, res) => {
     success = true;
     message = "Login successfully";
     errorCode = 200;
-    data.accessToken = "dummyToken";
+    data.token = "dummyToken";
+    data.userId = "1111";
+  }
+  res.status(errorCode).send({ success, message, data });
+});
+
+app.get("/profile", (req, res) => {
+  const { accessToken } = req.header;
+  let success = false;
+  let message = "Get list item failed";
+  let errorCode = 500;
+  let data = {};
+  if (accessToken === "dumyToken") {
+    success = true;
+    message = "Get list item successfully";
+    errorCode = 200;
+    data.name = "Loi";
+  } else {
+    errorCode = 402;
+    success = false;
+    message = "Invalid token";
   }
   res.status(errorCode).send({ success, message, data });
 });
@@ -41,14 +63,12 @@ app.get("/getListItem", (req, res) => {
       {
         name: "Coca",
         price: 20000,
-        image:
-          "https://product.hstatic.net/1000126467/product/coca-sleek-330ml-3.jpg"
+        image: "https://product.hstatic.net/1000126467/product/coca-sleek-330ml-3.jpg"
       },
       {
         name: "Pepsi",
         price: 40000,
-        image:
-          "https://images-na.ssl-images-amazon.com/images/I/61ZcFT1BvDL._SX522_.jpg"
+        image: "https://images-na.ssl-images-amazon.com/images/I/61ZcFT1BvDL._SX522_.jpg"
       },
       {
         name: "Revive",
@@ -71,8 +91,7 @@ app.get("/getListItem", (req, res) => {
       {
         name: "Strongbows",
         price: 24000,
-        image:
-          "https://www.totalwine.com/media/sys_master/twmmedia/hec/hb6/10997609332766.png"
+        image: "https://www.totalwine.com/media/sys_master/twmmedia/hec/hb6/10997609332766.png"
       }
     ];
 
@@ -80,6 +99,10 @@ app.get("/getListItem", (req, res) => {
       const index = randomIntFromInterval(0, 5);
       data.push(items[index]);
     }
+  } else {
+    errorCode = 402;
+    success = false;
+    message = "Invalid token";
   }
   res.status(errorCode).send({ success, message, data });
 });

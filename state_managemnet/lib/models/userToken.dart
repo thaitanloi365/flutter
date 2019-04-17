@@ -10,4 +10,8 @@ class UserToken {
       userId: json['userId'],
     );
   }
+
+  toMap() {
+    return {"userId": userId, "token": token};
+  }
 }

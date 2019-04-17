@@ -2,7 +2,11 @@ import '../models/models.dart';
 import '../services/services.dart';
 
 final Network network = Network();
-final endPointURL = {"login": "/login", "profile": "/profile"};
+final endPointURL = {
+  "login": "/login",
+  "profile": "/profile",
+  "getListItem": "/getListItem"
+};
 
 Future<UserToken> login(String username, String password) async {
   final body = {"username": username, "password": password};
