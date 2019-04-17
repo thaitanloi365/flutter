@@ -10,7 +10,7 @@ Future<bool> createSession() async {
   UserToken userToken = await SharedPrefs.get('userToken');
   if (userToken != null) {
     final values = await _fetchAllData();
-
+    print("Values: $values");
     return true;
   } else {
     return false;
@@ -20,6 +20,8 @@ Future<bool> createSession() async {
 Future<bool> loginAndCreateSession(String username, String password) async {
   try {
     final userToken = await login(username, password);
+    print("UserToken: $userToken");
+    return true;
   } catch (error) {
     return false;
   }
