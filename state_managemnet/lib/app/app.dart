@@ -24,22 +24,27 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  bool _isUserLogged = false;
-  bool _isInitializing = true;
-
   @override
   void initState() {
     super.initState();
     SharedPrefs.init();
 
+    bool _isOK = false;
     createSession().then((isOK) {
-      print("isOK $isOK");
-      _isUserLogged = isOK;
-    }).catchError((onError) {
-      print("error $onError");
+      _isOK = isOK;
     });
 
-    _isInitializing = false;
+    Future.delayed(Duration(seconds: 3)).then((v) {
+      _decideRoute(_isOK);
+    });
+  }
+
+  _decideRoute(bool isOK) {
+    if (isOK) {
+      Navigator.pushReplacementNamed(context, Routes.routeNames.home);
+    } else {
+      Navigator.pushReplacementNamed(context, Routes.routeNames.login);
+    }
   }
 
   Widget buildSplashScreen(BuildContext context) {
@@ -56,10 +61,6 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _isInitializing
-          ? SplashScreen()
-          : _isUserLogged ? HomeScreen() : LoginScreen(),
-    );
+    return Scaffold(body: SplashScreen());
   }
 }

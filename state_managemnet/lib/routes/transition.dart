@@ -23,7 +23,7 @@ class PageTransition<T> extends PageRouteBuilder<T> {
   PageTransition(
       {Key key,
       @required this.child,
-      this.type = PageTransitionType.leftToRightWithFade,
+      this.type = PageTransitionType.rightToLeft,
       this.curve = Curves.linear,
       this.alignment,
       this.duration = const Duration(milliseconds: 300)})
