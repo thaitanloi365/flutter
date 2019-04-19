@@ -23,7 +23,11 @@ class LoginScreen extends StatelessWidget {
             buildForm(),
             RaisedButton(
               onPressed: () {
-                Loading(context: context).show();
+                // Loading(context: context).show();
+                Alert(
+                        context: context,
+                        message: "Are you sure you want to logout ?")
+                    .show();
                 // showToast(context, "title", "message");
                 // OverlayState overlayState = Overlay.of(context);
                 // overlayState

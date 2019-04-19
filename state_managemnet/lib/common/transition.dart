@@ -54,7 +54,7 @@ class AnimationTransition {
       Widget child) {
     return ScaleTransition(
       scale: Tween<double>(
-        begin: 0.0,
+        begin: 0.2,
         end: 1.0,
       ).animate(
         CurvedAnimation(
@@ -89,5 +89,10 @@ class AnimationTransition {
       ),
       child: child,
     );
+  }
+
+  static none(Animation<double> animation, Animation<double> secondaryAnimation,
+      Widget child) {
+    return child;
   }
 }
