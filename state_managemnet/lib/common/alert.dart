@@ -4,14 +4,8 @@ enum AlertResult { Cancel, Ok }
 
 typedef AlertCallback = void Function(AlertResult result);
 
-showAlert(
-    {@required BuildContext context,
-    @required String message,
-    // ignore: AVOID_INIT_TO_NULL
-    String title = null,
-    // ignore: AVOID_INIT_TO_NULL
-    AlertCallback onClose = null}) {
-  // set up the buttons
+showAlert(BuildContext context, String message,
+    {String title = null, AlertCallback onClose = null}) {
   _dissmiss() {
     Navigator.of(context).pop();
   }
