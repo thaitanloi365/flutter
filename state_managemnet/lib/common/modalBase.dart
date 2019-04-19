@@ -1,26 +1,6 @@
 import 'package:flutter/material.dart';
 import 'transition.dart';
 
-// showLoading(BuildContext context) {
-//   Widget loading = Center(
-//     child: CircularProgressIndicator(),
-//   );
-
-//   showDialog(
-//     barrierDismissible: false,
-//     context: context,
-//     builder: (BuildContext context) {
-//       return loading;
-//     },
-//   );
-// }
-
-// hideLoading(BuildContext context, [VoidCallback onHide]) {
-//   Navigator.of(context).pop();
-//   if (onHide != null) {
-//     onHide();
-//   }
-// }
 enum AnimationType {
   FromLeft,
   FromRight,
@@ -48,7 +28,7 @@ class ModalBase implements ModalBaseBuilder {
       {@required this.context,
       this.onClose,
       this.onShow,
-      this.barrierColor = const Color.fromARGB(100, 0, 0, 0),
+      this.barrierColor = const Color.fromARGB(200, 0, 0, 0),
       this.duration = const Duration(milliseconds: 250),
       this.barrierDismissible = false,
       this.animationType = AnimationType.None});

@@ -14,8 +14,11 @@ class Toast extends StatefulWidget {
   final Duration duration;
   final ToastType type;
   final VoidCallback onClose;
+  final BuildContext context;
+  final _ToastState _toastState = _ToastState();
   Toast(
       {Key key,
+      @required this.context,
       @required this.title,
       @required this.message,
       this.duration = const Duration(seconds: 3),
@@ -24,12 +27,27 @@ class Toast extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ToastState createState() => _ToastState();
+  _ToastState createState() => _toastState;
+
+  show() => _toastState.show();
+  hide() => _toastState.hide();
 }
 
 class _ToastState extends State<Toast> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<Offset> translate;
+
+  show() {
+    print("show");
+    _controller.forward();
+  }
+
+  hide() {
+    _controller.reverse();
+    if (widget.onClose != null) {
+      widget.onClose();
+    }
+  }
 
   @override
   void initState() {
@@ -43,14 +61,14 @@ class _ToastState extends State<Toast> with SingleTickerProviderStateMixin {
     translate = Tween(begin: Offset(0, -0.2), end: Offset(0, 0)).animate(
         CurvedAnimation(parent: _controller, curve: Curves.fastOutSlowIn));
 
-    _controller.forward();
-
-    Future.delayed(widget.duration).then((onValue) {
-      _controller.reverse();
-      if (widget.onClose != null) {
-        widget.onClose();
-      }
-    });
+    if (widget.duration != null) {
+      Future.delayed(widget.duration).then((onValue) {
+        _controller.reverse();
+        if (widget.onClose != null) {
+          widget.onClose();
+        }
+      });
+    }
   }
 
   @override

@@ -1,58 +1,19 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:connectivity/connectivity.dart';
 import '../screens/screens.dart';
 import '../assets/assets.dart';
 import '../routes/routes.dart';
 import '../services/services.dart';
 import "../common/common.dart";
 
-class AppContext extends InheritedWidget {
-  final Function showLoading;
-  final Function hideLoading;
-  final Function showAlert;
-  final Function showToast;
-  final Function hideToast;
-
-  static AppContext of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(AppContext);
-  }
-
-  AppContext(
-      {Key key,
-      @required Widget child,
-      @required this.showLoading,
-      @required this.hideLoading,
-      @required this.showAlert,
-      @required this.showToast,
-      @required this.hideToast})
-      : super(key: key, child: child);
-
-  @override
-  bool updateShouldNotify(InheritedWidget oldWidget) => false;
-}
-
 class App extends StatelessWidget {
-  // This widget is the root of your application.
-  final Toast toast = Toast();
-  showAlert(BuildContext context) {
-    print("_showAlert context $context");
-  }
-
-  showLoading(BuildContext context) {
-    print("_showAlert context $context");
-  }
-
-  hideLoading(BuildContext context) {}
-
-  showToast(BuildContext context) {}
-
-  hideToast(BuildContext context) {}
   @override
   Widget build(BuildContext context) {
-    return AppContext(
-        child: MaterialApp(
-            theme: Assets.theme.themeData(true),
-            onGenerateRoute: (settings) => Routes.generateRoutes(settings),
-            home: StartPage()));
+    return MaterialApp(
+        theme: Assets.theme.themeData(),
+        onGenerateRoute: (settings) => Routes.generateRoutes(settings),
+        home: StartPage());
   }
 }
 
@@ -64,9 +25,29 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
+  StreamSubscription _subscription;
+
   @override
   void initState() {
     super.initState();
+
+    final Toast _toast = Toast(
+        context: context,
+        title: "Network not available",
+        message: "Network not available",
+        duration: null);
+
+    _subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      print("ConnectivityResult $result");
+      if (result != ConnectivityResult.none) {
+        _toast.show();
+      } else {
+        _toast.hide();
+      }
+    });
+
     SharedPrefs.init();
     bool _isOK = false;
     createSession().then((isOK) {
@@ -76,6 +57,13 @@ class _StartPageState extends State<StartPage> {
     Future.delayed(Duration(seconds: 1)).then((v) {
       _decideRoute(_isOK);
     });
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    SharedPrefs.dispose();
+    _subscription.cancel();
   }
 
   _decideRoute(bool isOK) {

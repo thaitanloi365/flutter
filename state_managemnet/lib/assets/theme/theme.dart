@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class Theme {
-    static final _theme = new Theme._();
-    Theme._();
-    factory Theme() {
-        return _theme;
-    }
-    ThemeData themeData([bool isDarkTheme]) {
-        return isDarkTheme ? kDarkTheme.data : kLightTheme.data;
-    }
+  static final _theme = new Theme._();
+  Theme._();
+  factory Theme() {
+    return _theme;
+  }
+  ThemeData themeData([bool isDarkTheme]) {
+    return isDarkTheme ?? false ? kDarkTheme.data : kLightTheme.data;
+  }
 }
 
 class _Theme {
